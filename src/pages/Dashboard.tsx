@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IData } from "../models/data";
 import { keyMap } from "../models/KeyMap";
 import { fetchUserData } from "../api/ApiService";
+import CLocations from "../shared/CLocations";
 
 // NORMALIZE data Function!
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,7 +43,9 @@ function Dashboard() {
         <div className="container px-6 py-10 mx-auto ">
           <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3">
             <div className="w-full">
-              <div className="w-full h-64 bg-gray-300 rounded-lg">name</div>
+              <div className="w-full  bg-gray-300 rounded-lg">
+                <CLocations />
+              </div>
             </div>
 
             <div className="w-full">
