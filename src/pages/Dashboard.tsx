@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { IData } from "../models/data";
 import { keyMap } from "../models/KeyMap";
 
-// NORMALIZE data Function
+// NORMALIZE data Function!
 function normalizeData(originalDataArray: never[]): IData[] {
   return originalDataArray.map((originalData) => {
     const result: Partial<IData> = {};
@@ -35,7 +35,7 @@ function Dashboard() {
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1 className="text-slate-300">Dashboard</h1>
       {userData.map((data) => (
         <div key={data.timestamp}>
           <h2>{data.timestamp}</h2>
