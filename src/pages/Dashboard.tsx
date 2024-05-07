@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { IData } from "../models/data";
 import { keyMap } from "../models/KeyMap";
+import { fetchUserData } from "../api/ApiService";
 
 // NORMALIZE data Function!
-function normalizeData(originalDataArray: never[]): IData[] {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeData(originalDataArray: any[]): IData[] {
   return originalDataArray.map((originalData) => {
     const result: Partial<IData> = {};
     Object.keys(originalData).forEach((key) => {
@@ -20,15 +22,15 @@ function Dashboard() {
   const [userData, setUserData] = useState<IData[]>([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        "https://script.googleusercontent.com/macros/echo?user_content_key=mlPoA54TWr6gO7-2W6QPF2HYWR9ZTpNOrqaFnL9RKse9EcRLSMLnUaCTKwka9kE2fYCp68DwhRAeYLwj0hxUf_q4E21j5_L9m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnH0OeD4X8d22QejNQiFKZSjS4qN13ofUJ-XzRNLocrAZtPoYXcf8rMUHzA16cle0JVuv27DCw97l2NqdDsTz-KG8mzDTCqnGIg&lib=M18bObiq9KnLXlDngnknKagBx2wiTu6LV"
-      );
-      const data = await response.json();
-      console.log("Raw API data:", data); // Log the raw data for debugging
-      const normalizedData = normalizeData(data);
-      setUserData(normalizedData);
-    }
+    const fetchData = async () => {
+      try {
+        const rawData = await fetchUserData();
+        const normalizedData = normalizeData(rawData);
+        setUserData(normalizedData);
+      } catch (error) {
+        console.error("Failed to load user data:", error);
+      }
+    };
 
     fetchData();
   }, []);
@@ -36,6 +38,25 @@ function Dashboard() {
   return (
     <div>
       <h1 className="text-slate-300">Dashboard</h1>
+      <section className="bg-white">
+        <div className="container px-6 py-10 mx-auto ">
+          <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3">
+            <div className="w-full">
+              <div className="w-full h-64 bg-gray-300 rounded-lg">name</div>
+            </div>
+
+            <div className="w-full">
+              <div className="w-full h-64 bg-gray-300 rounded-lg">location</div>
+            </div>
+
+            <div className="w-full">
+              <div className="w-full h-64 bg-gray-300 rounded-lg">
+                englishProficiency
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       {userData.map((data) => (
         <div key={data.timestamp}>
           <h2>{data.timestamp}</h2>
