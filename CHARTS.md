@@ -5,8 +5,8 @@ Bar Chart:
 
 Pie Chart:
 
-- English Proficiency
-- Course Attendance
+- Location DONE
+- English Proficiency DONE
 
 Horizontal Bar Chart:
 
@@ -16,6 +16,7 @@ Horizontal Bar Chart:
 Doughnut Chart:
 
 - Job Acquisition Post Course
+- Course Attendance DONE
 - Recommendation Rate
 
 Radar Chart:
