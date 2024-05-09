@@ -8,9 +8,9 @@ import { keyMap } from "../models/KeyMap";
 export function normalizeData(originalDataArray: any[]): IData[] {
   return originalDataArray.map((originalData) => {
     const result: Partial<IData> = {};
-    Object.keys(originalData).forEach((key) => {
+    Object.keys(keyMap).forEach((key) => {
       const newKey = keyMap[key as keyof typeof keyMap];
-      if (newKey) {
+      if (newKey && originalData[key] !== undefined) {
         result[newKey as keyof IData] = originalData[key];
       }
     });

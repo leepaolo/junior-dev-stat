@@ -1,30 +1,33 @@
-// CKnownLanguages.tsx
+// CLanguagesToLearn.tsx
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { IData } from "../models/data"; // Ensure this path is correct
+import { IData } from "../models/data"; // Adjust this path based on your project structure
 
-interface CKnownLanguagesProps {
+interface CLanguagesToLearnProps {
   userData: IData[];
 }
 
-function CKnownLanguages({ userData }: CKnownLanguagesProps) {
+function CLanguagesToLearn({ userData }: CLanguagesToLearnProps) {
   const [languageData, setLanguageData] = useState<{ [key: string]: number }>(
     {}
   );
 
   useEffect(() => {
     const languageCounts = parseAndCountLanguages(userData);
-    const topFiveLanguages = getTopLanguages(languageCounts, 5);
+    const topFiveLanguages = getTopLanguages(languageCounts, 5); // Assuming you want the top 5
     setLanguageData(topFiveLanguages);
-  }, [userData]);
+  }, [userData]); // Update when userData changes
 
   const parseAndCountLanguages = (data: IData[]): { [key: string]: number } => {
     const counts: { [key: string]: number } = {};
     data.forEach((entry) => {
-      if (entry.knownLanguages && typeof entry.knownLanguages === "string") {
-        const languages = entry.knownLanguages
+      if (
+        entry.languagesToLearn &&
+        typeof entry.languagesToLearn === "string"
+      ) {
+        const languages = entry.languagesToLearn
           .split(", ")
           .map((lang) => lang.trim());
         languages.forEach((language) => {
@@ -52,7 +55,7 @@ function CKnownLanguages({ userData }: CKnownLanguagesProps) {
     labels: Object.keys(languageData),
     datasets: [
       {
-        label: "Top Programming Languages Known",
+        label: "Top Languages to Learn",
         data: Object.values(languageData),
         backgroundColor: [
           "rgba(255, 99, 132, 0.6)",
@@ -60,7 +63,6 @@ function CKnownLanguages({ userData }: CKnownLanguagesProps) {
           "rgba(255, 206, 86, 0.6)",
           "rgba(75, 192, 192, 0.6)",
           "rgba(153, 102, 255, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
         ],
         borderColor: [
           "rgba(255, 99, 132, 1)",
@@ -68,7 +70,6 @@ function CKnownLanguages({ userData }: CKnownLanguagesProps) {
           "rgba(255, 206, 86, 1)",
           "rgba(75, 192, 192, 1)",
           "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
         ],
         borderWidth: 1,
       },
@@ -77,10 +78,9 @@ function CKnownLanguages({ userData }: CKnownLanguagesProps) {
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
-    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "top" as const,
+        position: "top",
       },
       tooltip: {
         enabled: true,
@@ -97,10 +97,10 @@ function CKnownLanguages({ userData }: CKnownLanguagesProps) {
 
   return (
     <div>
-      {/* <h2>Top Programming Languages Known</h2> */}
+      {/* <h2>Top Languages People Want to Learn</h2> */}
       <Bar data={data} options={options} />
     </div>
   );
 }
 
-export default CKnownLanguages;
+export default CLanguagesToLearn;

@@ -1,39 +1,30 @@
 // CEnglishProficiency.tsx
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Adjust this path based on where your data model is located
 
-function CEnglishProficiency() {
+interface CEnglishProficiencyProps {
+  userData: IData[];
+}
+
+function CEnglishProficiency({ userData }: CEnglishProficiencyProps) {
   const [proficiencyData, setProficiencyData] = useState<{
     [level: string]: number;
   }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData();
-        const normalizedData = normalizeData(rawData);
-        const counts = normalizedData.reduce<{ [level: string]: number }>(
-          (acc, item) => {
-            const proficiency = item.englishProficiency; // Assuming the field is named 'englishProficiency'
-            if (proficiency) {
-              acc[proficiency] = (acc[proficiency] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setProficiencyData(counts);
-      } catch (error) {
-        console.error("Failed to load English proficiency data:", error);
+    const counts = userData.reduce<{ [level: string]: number }>((acc, item) => {
+      const proficiency = item.englishProficiency; // Ensure 'englishProficiency' matches the field in IData
+      if (proficiency) {
+        acc[proficiency] = (acc[proficiency] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setProficiencyData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(proficiencyData),
@@ -67,7 +58,7 @@ function CEnglishProficiency() {
 
   return (
     <div>
-      <h2>English Proficiency Distribution</h2>
+      {/* <h2>English Proficiency Distribution</h2> */}
       <Pie data={data} options={options} />
     </div>
   );

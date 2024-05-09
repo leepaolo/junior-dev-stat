@@ -1,40 +1,31 @@
 // CDeveloperType.tsx
-
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust path as needed
-import { useEffect, useState } from "react";
+import { IData } from "../models/data"; // Ensure this path is correct
 
-function CDeveloperType() {
+interface CDeveloperTypeProps {
+  userData: IData[];
+}
+
+function CDeveloperType({ userData }: CDeveloperTypeProps) {
   const [developerData, setDeveloperData] = useState<{
     [type: string]: number;
   }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData();
-        const normalizedData = normalizeData(rawData);
-        const counts = normalizedData.reduce<{ [type: string]: number }>(
-          (acc, item) => {
-            const type = item.developerType; // Assuming there's a field named 'developerType'
-            if (type) {
-              acc[type] = (acc[type] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setDeveloperData(counts);
-      } catch (error) {
-        console.error("Failed to load developer type data:", error);
+    // Process the passed userData to count developer types
+    const counts = userData.reduce<{ [type: string]: number }>((acc, item) => {
+      const type = item.developerType; // Ensure 'developerType' matches the field in IData
+      if (type) {
+        acc[type] = (acc[type] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setDeveloperData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(developerData),
@@ -89,7 +80,7 @@ function CDeveloperType() {
 
   return (
     <div>
-      <h2>Developer Type Distribution</h2>
+      {/* <h2>Developer Type Distribution</h2> */}
       <Bar data={data} options={options} />
     </div>
   );

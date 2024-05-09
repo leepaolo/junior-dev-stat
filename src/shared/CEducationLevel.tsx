@@ -1,38 +1,30 @@
+// CEducationLevel.tsx
 import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Adjust this path based on where your data model is located
 
-function CEducationLevel() {
+interface CEducationLevelProps {
+  userData: IData[];
+}
+
+function CEducationLevel({ userData }: CEducationLevelProps) {
   const [educationData, setEducationData] = useState<{ [key: string]: number }>(
     {}
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // API call to fetch education data
-        const normalizedData = normalizeData(rawData); // Normalize the data
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const level = item.educationLevel; // Assuming 'educationLevel' is the field
-            if (level) {
-              acc[level] = (acc[level] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setEducationData(counts);
-      } catch (error) {
-        console.error("Failed to load education level data:", error);
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const level = item.educationLevel; // Ensure 'educationLevel' matches the field in IData
+      if (level) {
+        acc[level] = (acc[level] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setEducationData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(educationData),
@@ -82,7 +74,7 @@ function CEducationLevel() {
 
   return (
     <div>
-      <h2>Education Level Distribution</h2>
+      {/* <h2>Education Level Distribution</h2> */}
       <Pie data={data} options={options} />
     </div>
   );

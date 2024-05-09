@@ -1,36 +1,29 @@
+// CLinkedinOffers.tsx
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Adjust this path based on your project structure
 
-function CLinkedinOffers() {
+interface CLinkedinOffersProps {
+  userData: IData[];
+}
+
+function CLinkedinOffers({ userData }: CLinkedinOffersProps) {
   const [offerData, setOfferData] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // Your API call to fetch LinkedIn offer data
-        const normalizedData = normalizeData(rawData); // Assuming normalization adjusts data as needed
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const offerType = item.linkedinOffers; // Assuming 'offerType' is the field
-            if (offerType) {
-              acc[offerType] = (acc[offerType] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setOfferData(counts);
-      } catch (error) {
-        console.error("Failed to load LinkedIn offer data:", error);
+    // Process the passed userData to count LinkedIn offers
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const offerType = item.linkedinOffers; // Ensure 'linkedinOffers' matches the field in IData
+      if (offerType) {
+        acc[offerType] = (acc[offerType] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setOfferData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(offerData),
@@ -54,8 +47,7 @@ function CLinkedinOffers() {
           "rgba(153, 102, 255, 0.8)",
           "rgba(255, 159, 64, 0.8)",
         ],
-        // Removed the border color and width for seamless slices
-        borderColor: "rgba(0, 0, 0, 0)", // Setting to transparent
+        borderColor: "rgba(0, 0, 0, 0)", // Transparent border
         borderWidth: 0,
       },
     ],
@@ -81,7 +73,7 @@ function CLinkedinOffers() {
 
   return (
     <div>
-      <h2>LinkedIn Job Offers</h2>
+      {/* <h2>LinkedIn Job Offers</h2> */}
       <Doughnut data={data} options={options} />
     </div>
   );

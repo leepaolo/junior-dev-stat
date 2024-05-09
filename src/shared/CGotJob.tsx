@@ -1,36 +1,29 @@
-import { useEffect, useState } from "react";
+// CGotJob.tsx
+import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Make sure the path is correct
 
-function CGotJob() {
+interface CGotJobProps {
+  userData: IData[];
+}
+
+function CGotJob({ userData }: CGotJobProps) {
   const [jobData, setJobData] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // Your API call to fetch job data
-        const normalizedData = normalizeData(rawData); // Assuming this normalizes raw data appropriately
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const jobField = item.gotJob;
-            if (jobField) {
-              acc[jobField] = (acc[jobField] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setJobData(counts);
-      } catch (error) {
-        console.error("Failed to load job data:", error);
+    // Process the passed userData to count job data
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const jobField = item.gotJob; // Ensure 'gotJob' is the correct field name in IData
+      if (jobField) {
+        acc[jobField] = (acc[jobField] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setJobData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(jobData),
@@ -71,7 +64,7 @@ function CGotJob() {
 
   return (
     <div>
-      <h2>Jobs Secured</h2>
+      {/* <h2>Jobs Secured</h2> */}
       <Doughnut data={data} options={options} />
     </div>
   );

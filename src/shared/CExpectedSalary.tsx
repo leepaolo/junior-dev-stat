@@ -1,36 +1,29 @@
+// CExpectedSalary.tsx
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Adjust this path based on your project structure
 
-function CExpectedSalary() {
+interface CExpectedSalaryProps {
+  userData: IData[];
+}
+
+function CExpectedSalary({ userData }: CExpectedSalaryProps) {
   const [salaryData, setSalaryData] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // API call to fetch salary data
-        const normalizedData = normalizeData(rawData); // Normalize the data
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const salaryRange = item.expectedSalary; // Assuming 'salaryRange' is the field
-            if (salaryRange) {
-              acc[salaryRange] = (acc[salaryRange] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setSalaryData(counts);
-      } catch (error) {
-        console.error("Failed to load expected salary data:", error);
+    // Process the passed userData to count expected salary ranges
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const salaryRange = item.expectedSalary; // Ensure 'expectedSalary' matches the field in IData
+      if (salaryRange) {
+        acc[salaryRange] = (acc[salaryRange] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setSalaryData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(salaryData),
@@ -80,7 +73,7 @@ function CExpectedSalary() {
 
   return (
     <div>
-      <h2>Expected Salary Distribution</h2>
+      {/* <h2>Expected Salary Distribution</h2> */}
       <Bar data={data} options={options} />
     </div>
   );

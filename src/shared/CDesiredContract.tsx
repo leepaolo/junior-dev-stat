@@ -1,38 +1,31 @@
-import { useEffect, useState } from "react";
+// CDesiredContract.tsx
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Adjust this path based on your project structure
 
-function CDesiredContract() {
+interface CDesiredContractProps {
+  userData: IData[];
+}
+
+function CDesiredContract({ userData }: CDesiredContractProps) {
   const [contractData, setContractData] = useState<{ [key: string]: number }>(
     {}
   );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // API call to fetch contract data
-        const normalizedData = normalizeData(rawData); // Normalize the data
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const contractType = item.desiredContract; // Assuming 'contractType' is the field
-            if (contractType) {
-              acc[contractType] = (acc[contractType] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setContractData(counts);
-      } catch (error) {
-        console.error("Failed to load desired contract data:", error);
+    // Process the passed userData to count desired contract types
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const contractType = item.desiredContract; // Ensure 'desiredContract' matches the field in IData
+      if (contractType) {
+        acc[contractType] = (acc[contractType] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setContractData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(contractData),
@@ -82,7 +75,7 @@ function CDesiredContract() {
 
   return (
     <div>
-      <h2>Desired Contract Types Distribution</h2>
+      {/* <h2>Desired Contract Types Distribution</h2> */}
       <Bar data={data} options={options} />
     </div>
   );

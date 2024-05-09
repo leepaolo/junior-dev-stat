@@ -1,38 +1,31 @@
+// CLinkedinOptimized.tsx
 import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService"; // Adjust the path as needed
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Make sure the path is correct
 
-function CLinkedinOptimized() {
+interface CLinkedinOptimizedProps {
+  userData: IData[];
+}
+
+function CLinkedinOptimized({ userData }: CLinkedinOptimizedProps) {
   const [optimizationData, setOptimizationData] = useState<{
     [key: string]: number;
   }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // API call to fetch optimization data
-        const normalizedData = normalizeData(rawData); // Normalize the data
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const optimizationType = item.linkedinOptimized; // Assuming 'optimizationType' is the field
-            if (optimizationType) {
-              acc[optimizationType] = (acc[optimizationType] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setOptimizationData(counts);
-      } catch (error) {
-        console.error("Failed to load LinkedIn optimization data:", error);
+    // Process the passed userData to count LinkedIn optimization activities
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const optimizationType = item.linkedinOptimized; // Ensure 'linkedinOptimized' matches the field in IData
+      if (optimizationType) {
+        acc[optimizationType] = (acc[optimizationType] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setOptimizationData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(optimizationData),
@@ -56,8 +49,8 @@ function CLinkedinOptimized() {
           "rgba(153, 102, 255, 0.8)",
           "rgba(255, 159, 64, 0.8)",
         ],
-        borderColor: "rgba(0, 0, 0, 0)", // Setting border color to transparent
-        borderWidth: 0, // No border width
+        borderColor: "rgba(0, 0, 0, 0)", // Transparent border
+        borderWidth: 0,
       },
     ],
   };
@@ -82,7 +75,7 @@ function CLinkedinOptimized() {
 
   return (
     <div>
-      <h2>LinkedIn Optimization Activities</h2>
+      {/* <h2>LinkedIn Optimization Activities</h2> */}
       <Pie data={data} options={options} />
     </div>
   );

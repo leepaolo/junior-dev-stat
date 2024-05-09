@@ -1,36 +1,29 @@
-import { useEffect, useState } from "react";
+// CAttendedCourse.tsx
+import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService";
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Ensure this path is correct
 
-function CAttendedCourse() {
+interface CAttendedCourseProps {
+  userData: IData[];
+}
+
+function CAttendedCourse({ userData }: CAttendedCourseProps) {
   const [courseData, setCourseData] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // Your API call to fetch course data
-        const normalizedData = normalizeData(rawData); // Assuming this normalizes raw data to your needs
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const courseName = item.attendedCourse; // Assuming 'courseName' is the field you need
-            if (courseName) {
-              acc[courseName] = (acc[courseName] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setCourseData(counts);
-      } catch (error) {
-        console.error("Failed to load course data:", error);
+    // Process the passed userData to count courses
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const courseName = item.attendedCourse; // Ensure 'attendedCourse' matches the field in IData
+      if (courseName) {
+        acc[courseName] = (acc[courseName] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setCourseData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(courseData),
@@ -71,7 +64,7 @@ function CAttendedCourse() {
 
   return (
     <div>
-      <h2>Course Attendance</h2>
+      {/* <h2>Course Attendance</h2> */}
       <Doughnut data={data} options={options} />
     </div>
   );

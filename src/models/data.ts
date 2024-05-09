@@ -4,8 +4,8 @@ export interface IData {
   location: string;
   englishProficiency: string;
   developerType: string;
-  knownLanguages?: string[];
-  languagesToLearn: string[];
+  knownLanguages: string;
+  languagesToLearn: string;
   attendedCourse: string;
   recommendCourse: string;
   gotJob: string;

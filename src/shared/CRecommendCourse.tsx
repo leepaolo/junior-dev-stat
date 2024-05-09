@@ -1,38 +1,31 @@
+// CRecommendCourse.tsx
 import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { ChartOptions } from "chart.js";
-import { fetchUserData } from "../api/ApiService";
-import { normalizeData } from "../services/Normalize"; // Adjust the path as needed
+import { IData } from "../models/data"; // Ensure this path is correct
 
-function CRecommendCourse() {
+interface CRecommendCourseProps {
+  userData: IData[];
+}
+
+function CRecommendCourse({ userData }: CRecommendCourseProps) {
   const [recommendationData, setRecommendationData] = useState<{
     [key: string]: number;
   }>({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rawData = await fetchUserData(); // Your API call to fetch recommendation data
-        const normalizedData = normalizeData(rawData); // Assuming this normalizes raw data appropriately
-        const counts = normalizedData.reduce<{ [key: string]: number }>(
-          (acc, item) => {
-            const courseName = item.recommendCourse;
-            if (courseName) {
-              acc[courseName] = (acc[courseName] || 0) + 1;
-            }
-            return acc;
-          },
-          {}
-        );
-        setRecommendationData(counts);
-      } catch (error) {
-        console.error("Failed to load recommendation data:", error);
+    // Process the passed userData to count course recommendations
+    const counts = userData.reduce<{ [key: string]: number }>((acc, item) => {
+      const courseName = item.recommendCourse; // Ensure 'recommendCourse' matches the field in IData
+      if (courseName) {
+        acc[courseName] = (acc[courseName] || 0) + 1;
       }
-    };
+      return acc;
+    }, {});
 
-    fetchData();
-  }, []);
+    setRecommendationData(counts);
+  }, [userData]); // Include userData in dependency array to recalculate when userData changes
 
   const data = {
     labels: Object.keys(recommendationData),
@@ -73,7 +66,7 @@ function CRecommendCourse() {
 
   return (
     <div>
-      <h2>Course Recommendations</h2>
+      {/* <h2>Course Recommendations</h2> */}
       <Doughnut data={data} options={options} />
     </div>
   );
