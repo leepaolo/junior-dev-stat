@@ -91,21 +91,21 @@ function Dashboard() {
           <section className="bg-white">
             <div className="container px-6 py-10 mx-auto">
               <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 sm:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3">
-                <div className="flex flex-col items-center w-full ">
+                <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
                     <CDeveloperType userData={userData} />
                   </div>
                   <p className="text-xl mt-4">Categoria developer</p>
                 </div>
 
-                <div className="flex flex-col items-center w-full ">
+                <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
                     <CExpectedSalary userData={userData} />
                   </div>
                   <p className="text-xl mt-4">RAL Junior desiderata</p>
                 </div>
 
-                <div className="flex flex-col items-center w-full ">
+                <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
                     <CDesiredContract userData={userData} />
                   </div>
@@ -118,16 +118,16 @@ function Dashboard() {
           <section className="bg-white">
             <div className="container px-6 py-10 mx-auto ">
               <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 sm:grid-cols-2 xl:grid-cols-2 lg:grid-cols-3">
-                <div className="flex flex-col items-center w-full ">
+                <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
                     <CKnownLanguages userData={userData} />
                   </div>
                   <p className="text-xl mt-4">Top 5 Stack conosciuti</p>
                 </div>
 
-                <div className="flex flex-col items-center w-full ">
+                <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
-                    <CKnownLanguages userData={userData} />
+                    <CLanguagesToLearn userData={userData} />
                   </div>
                   <p className="text-xl mt-4">Top 5 Stack da imparare</p>
                 </div>

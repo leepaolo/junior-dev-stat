@@ -78,6 +78,7 @@ function CLanguagesToLearn({ userData }: CLanguagesToLearnProps) {
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",

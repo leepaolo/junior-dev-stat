@@ -56,6 +56,7 @@ function CDesiredContract({ userData }: CDesiredContractProps) {
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",

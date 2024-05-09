@@ -56,6 +56,7 @@ function CDeveloperType({ userData }: CDeveloperTypeProps) {
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       x: {
         title: {

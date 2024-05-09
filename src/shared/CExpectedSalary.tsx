@@ -54,6 +54,7 @@ function CExpectedSalary({ userData }: CExpectedSalaryProps) {
 
   const options: ChartOptions<"bar"> = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
