@@ -39,10 +39,27 @@ function Dashboard() {
       <section className="bg-white">
         <div className="container px-6 py-10 mx-auto">
           {" "}
-          <h1 className=" text-4xl text-slate-800">
+          <h1 className=" text-4xl font-semibold text-slate-800">
             Cosa hanno in comune i JUNIORS Italiani?
           </h1>
-          <p>Fatti un'idea di quali sono le pref</p>
+          <p className="text-2xl  text-slate-600 mb-4">
+            Attravero questa dahsboard puoi farti un'idea sul profilo "Tipo" dei
+            Juniors Italiani. Le statistiche sono aggiornate ogni volta che un
+            nuovo sondaggio viene inviato. Al sondaggio hanno partecipato{" "}
+            <span className="font-medium  text-slate-800">
+              {userData.length}{" "}
+            </span>
+            Juniors!
+          </p>
+          <p className="text-2xl  text-slate-600">
+            Se non l'hai ancora fatto,{" "}
+            <a
+              className="text-blue-800 underline"
+              href="https://bit.ly/JUNIOR-Dev"
+            >
+              PARTECITA AL SONDAGGIO!
+            </a>{" "}
+          </p>
         </div>
       </section>
       {userData.length > 0 ? (
@@ -115,14 +132,14 @@ function Dashboard() {
             </div>
           </section>
 
-          <section className="bg-white">
+          <section className="bg-white mb-4">
             <div className="container px-6 py-10 mx-auto ">
               <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-12 sm:grid-cols-2 xl:grid-cols-2 lg:grid-cols-3">
                 <div className="w-full flex flex-col items-center">
                   <div className=" w-full rounded-lg">
                     <CKnownLanguages userData={userData} />
                   </div>
-                  <p className="text-xl mt-4">Top 5 Stack conosciuti</p>
+                  <p className="text-xl mt-4">Top 5 Stack più conosciuti</p>
                 </div>
 
                 <div className="w-full flex flex-col items-center">
@@ -138,6 +155,24 @@ function Dashboard() {
       ) : (
         <p>Loading...</p>
       )}
+
+      <section className="bg-white mb-4">
+        <div className="container px-6 py-10 mx-auto">
+          {" "}
+          <h1 className=" text-4xl font-semibold text-slate-800">
+            Let's keep in touch!
+          </h1>
+          <p className="text-2xl  text-slate-600 mb-4">
+            Se hai domande oppure hai bisogno d'aiuto, seguimi su{" "}
+            <a
+              className="text-blue-800 underline"
+              href="https://www.linkedin.com/in/angelinipaolo/"
+            >
+              LINKEDIN
+            </a>{" "}
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
