@@ -1,5 +1,5 @@
 // Dashboard.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchUserData } from "../api/ApiService";
 import { normalizeData } from "../services/Normalize";
 import CLocations from "../shared/CLocations";
